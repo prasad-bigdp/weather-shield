@@ -54,14 +54,12 @@ export const Alerts: React.FC = () => {
           <div className="status-info">
             <span className="status-badge">{statusInfo.label}</span>
             <h1 className="status-title">
-              {hasActiveAlert ? currentAlert.title : 'Weather Shield Quality Status'}
+              Air Quality Status
             </h1>
             <p className="status-description">
-              {hasActiveAlert 
-                ? currentAlert.message 
-                : currentData 
-                  ? `Current AQI is ${currentData.aqi} - ${aqiInfo?.description || 'Safe for outdoor activities'}`
-                  : 'Loading environmental data...'}
+              {currentData 
+                ? `Current AQI is ${currentData.aqi} - ${aqiInfo?.description || 'Monitoring active'}`
+                : 'Loading environmental data...'}
             </p>
           </div>
 

@@ -40,7 +40,7 @@ interface EnvironmentStore {
 export const useEnvironmentStore = create<EnvironmentStore>((set, get) => ({
   // Initial state
   currentData: null,
-  loading: false,
+  loading: true,
   error: null,
   lastUpdated: null,
   pm25Trend: [],

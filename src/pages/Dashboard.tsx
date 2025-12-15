@@ -20,35 +20,6 @@ export const Dashboard: React.FC = () => {
   } = useEnvironmentStore();
   const navigate = useNavigate();
 
-  // Loading State
-  if (loading && !currentData) {
-    return (
-      <div className="animate-fade-in">
-        <div className="metrics-grid">
-          {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div 
-              key={i} 
-              className="metric-card"
-              style={{ height: 140, background: '#F9FAFB' }}
-            />
-          ))}
-        </div>
-        <div 
-          className="parks-section" 
-          style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            padding: '48px',
-            color: '#6B7280'
-          }}
-        >
-          <RefreshCw size={24} className="animate-spin" style={{ marginRight: 12 }} />
-          <span style={{ fontWeight: 500 }}>Loading environmental data...</span>
-        </div>
-      </div>
-    );
-  }
 
   // Error State - No Data Available
   if (!loading && !currentData && error) {

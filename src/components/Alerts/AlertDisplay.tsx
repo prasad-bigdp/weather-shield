@@ -167,7 +167,7 @@ export const AlertDisplay: React.FC<AlertDisplayProps> = ({ alert, currentData }
     );
   }
 
-  // Wildfire Alert
+  // Wildfire Alert - Full display
   if (alert.type === 'wildfire') {
     return (
       <div style={{

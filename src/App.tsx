@@ -6,9 +6,9 @@ import { Analytics } from './pages/Analytics';
 import { Alerts } from './pages/Alerts';
 import { ParksExplorer } from './components/Parks/ParksExplorer';
 import { ProfileTab } from './components/Profile/ProfileTab';
-import { WildfireAlertOverlay } from './components/Alerts/WildfireAlertOverlay';
 import { useEnvironmentStore } from './store/environmentStore';
 import { formatRelativeTime } from './utils/formatters';
+import { CreativeLoader } from './components/common/CreativeLoader';
 import './index.css';
 
 function App() {
@@ -25,10 +25,19 @@ function App() {
     currentData,
   } = useEnvironmentStore();
 
-  // Initial data fetch
+  // Initial data fetch and minimum loader time
+  const [showInitialLoader, setShowInitialLoader] = useState(true);
+
   useEffect(() => {
     fetchData();
     fetchParksData();
+
+    // Force loader to show for at least 2.5 seconds to showcase the animation
+    const timer = setTimeout(() => {
+      setShowInitialLoader(false);
+    }, 2500);
+
+    return () => clearTimeout(timer);
   }, []);
 
   // Auto-refresh every 5 minutes
@@ -92,17 +101,11 @@ function App() {
     }
   };
 
-  // Check for wildfire alert - this takes over the entire screen
-  const showWildfireOverlay = currentAlert?.type === 'wildfire' && 
-                               currentAlert?.severity === 'danger' &&
-                               !currentAlert?.dismissible;
 
   return (
     <>
-      {/* Wildfire Alert Overlay - Takes over entire screen */}
-      {showWildfireOverlay && currentAlert && (
-        <WildfireAlertOverlay alert={currentAlert} currentData={currentData} />
-      )}
+      {/* Initial Loading State - Show if forced timer is active OR if data is still loading */}
+      {(showInitialLoader || (loading && !currentData)) && <CreativeLoader />}
 
       <div className="app-container">
         {/* Purple Gradient Sidebar */}
