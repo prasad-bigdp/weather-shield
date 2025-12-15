@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, Sun, Sunrise, Sunset, CheckCircle, AlertTriangle, XCircle, Heart, Sparkles } from 'lucide-react';
+import { Sun, Sunrise, Sunset, CheckCircle, AlertTriangle, XCircle, Heart, Sparkles } from 'lucide-react';
 import { getBestExerciseTime } from '../../utils/aqiCalculator';
 
 interface ExerciseTimeProps {

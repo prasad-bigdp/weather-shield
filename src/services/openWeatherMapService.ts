@@ -50,13 +50,7 @@ interface OWMWeatherResponse {
   name: string;
 }
 
-interface OWMUVResponse {
-  lat: number;
-  lon: number;
-  date_iso: string;
-  date: number;
-  value: number;
-}
+
 
 interface EnvironmentalDataWithTrends {
   current: EnvironmentalData;
@@ -66,13 +60,7 @@ interface EnvironmentalDataWithTrends {
   };
 }
 
-/**
- * Convert OpenWeatherMap AQI (1-5 scale) to US AQI (0-500 scale)
- */
-function convertOWMAQItoUSAQI(owmAqi: number, pm25: number): number {
-  // Use PM2.5 to calculate US AQI for more accuracy
-  return calculateAQI(pm25);
-}
+
 
 /**
  * Fetch current environmental data AND trends from OpenWeatherMap

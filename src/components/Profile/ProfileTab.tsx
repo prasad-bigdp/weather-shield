@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   User, MapPin, Bell, Settings, Star, Shield, 
   Smartphone, Moon, Sun, Globe, ChevronRight, Sparkles,
-  Heart, Zap, Crown, Lock, Mail, LogIn, X, Check, LogOut,
-  Wind, TreePine, Activity, Cloud, Droplets, ThermometerSun
+  Heart, Crown, Lock, Mail, X, Check, LogOut,
+  Wind, TreePine, Activity, Droplets, ThermometerSun
 } from 'lucide-react';
 import { getFirebaseServices } from '../../config/firebase';
 import { 
@@ -213,7 +213,7 @@ export const ProfileTab: React.FC = () => {
             </div>
             <div className="stat-content">
               <span className="stat-value">
-                {currentData ? `${Math.round(currentData.temperature)}°C` : '--'}
+                {currentData && currentData.temperature !== null ? `${Math.round(currentData.temperature)}°C` : '--'}
               </span>
               <span className="stat-label">Temperature</span>
             </div>

@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Alert, EnvironmentalData } from '../../types';
-import { AlertTriangle, Shield, Flame, X } from 'lucide-react';
+import { AlertTriangle, Shield } from 'lucide-react';
 
 interface WildfireAlertOverlayProps {
   alert: Alert;
