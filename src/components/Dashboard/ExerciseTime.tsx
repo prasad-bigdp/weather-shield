@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Sun, Sunrise, Sunset, CheckCircle, AlertTriangle, XCircle, Heart, Sparkles } from 'lucide-react';
 import { getBestExerciseTime } from '../../utils/aqiCalculator';
 
@@ -38,12 +38,47 @@ const getQualityConfig = (aqi: number) => {
   };
 };
 
+// Get time slot specific recommendation
+const getTimeSlotInfo = (slotIndex: number, aqi: number) => {
+  // Simulate different AQI scenarios for different times
+  const timeAdjustment = slotIndex === 0 ? -15 : slotIndex === 2 ? -10 : 0;
+  const adjustedAQI = Math.max(20, aqi + timeAdjustment);
+  
+  const messages = [
+    { // Morning
+      good: 'Morning air is typically freshest. Great for jogging!',
+      moderate: 'Morning exercise is your best bet today.',
+      poor: 'Even mornings have elevated pollution. Consider indoor options.'
+    },
+    { // Midday
+      good: 'Good conditions all day - Safe for outdoor activities',
+      moderate: 'Peak sun hours may increase ozone. Hydrate well.',
+      poor: 'Avoid strenuous outdoor activity during peak hours.'
+    },
+    { // Evening
+      good: 'Great time for a sunset jog or outdoor yoga!',
+      moderate: 'Air quality improves as temperatures cool.',
+      poor: 'Pollution may linger. Prefer early morning if possible.'
+    }
+  ];
+
+  const qualityLevel = adjustedAQI <= 75 ? 'good' : adjustedAQI <= 125 ? 'moderate' : 'poor';
+  return {
+    message: messages[slotIndex][qualityLevel],
+    aqi: adjustedAQI,
+    quality: qualityLevel
+  };
+};
+
 export const ExerciseTime: React.FC<ExerciseTimeProps> = ({ aqiTrend, currentAQI }) => {
-  const config = getQualityConfig(currentAQI);
+  const [activeSlot, setActiveSlot] = useState(1); // Default to Midday
+  
+  const slotInfo = getTimeSlotInfo(activeSlot, currentAQI);
+  const config = getQualityConfig(slotInfo.aqi);
   
   const recommendation = aqiTrend.length > 0
     ? getBestExerciseTime(aqiTrend)
-    : config.recommendation;
+    : slotInfo.message;
   
   const StatusIcon = config.quality === 'excellent' || config.quality === 'good' 
     ? CheckCircle 
@@ -52,13 +87,13 @@ export const ExerciseTime: React.FC<ExerciseTimeProps> = ({ aqiTrend, currentAQI
     : XCircle;
   
   const circumference = 2 * Math.PI * 50;
-  const progress = Math.max(0, Math.min(100, 100 - (currentAQI / 200) * 100));
+  const progress = Math.max(0, Math.min(100, 100 - (slotInfo.aqi / 200) * 100));
   const strokeDashoffset = circumference - (progress / 100) * circumference;
   
   const timeSlots = [
-    { time: '6:00 AM', label: 'Morning', icon: <Sunrise size={18} />, active: false },
-    { time: '12:00 PM', label: 'Midday', icon: <Sun size={18} />, active: true },
-    { time: '6:00 PM', label: 'Evening', icon: <Sunset size={18} />, active: false },
+    { time: '6:00 AM', label: 'Morning', icon: <Sunrise size={18} /> },
+    { time: '12:00 PM', label: 'Midday', icon: <Sun size={18} /> },
+    { time: '6:00 PM', label: 'Evening', icon: <Sunset size={18} /> },
   ];
   
   return (
@@ -117,14 +152,18 @@ export const ExerciseTime: React.FC<ExerciseTimeProps> = ({ aqiTrend, currentAQI
             />
           </svg>
           <div className="aqi-ring-value">
-            <div className="aqi-ring-number">{currentAQI}</div>
+            <div className="aqi-ring-number" style={{ color: config.color, transition: 'color 0.3s ease' }}>
+              {slotInfo.aqi}
+            </div>
             <div className="aqi-ring-label">AQI</div>
           </div>
         </div>
         
         {/* Info */}
         <div className="exercise-info">
-          <p className="exercise-recommendation">{recommendation}</p>
+          <p className="exercise-recommendation" style={{ transition: 'all 0.3s ease' }}>
+            {recommendation}
+          </p>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
             <Sparkles size={16} style={{ color: config.color }} />
             <span style={{ fontSize: 14, fontWeight: 600, color: '#374151' }}>Recommended Activities</span>
@@ -139,16 +178,27 @@ export const ExerciseTime: React.FC<ExerciseTimeProps> = ({ aqiTrend, currentAQI
         </div>
       </div>
       
-      {/* Time Slots */}
+      {/* Time Slots - Now Interactive */}
       <div className="time-slots">
         {timeSlots.map((slot, index) => (
-          <div key={index} className={`time-slot ${slot.active ? 'active' : ''}`}>
+          <button
+            key={index}
+            onClick={() => setActiveSlot(index)}
+            className={`time-slot ${activeSlot === index ? 'active' : ''}`}
+            style={{
+              cursor: 'pointer',
+              border: 'none',
+              outline: 'none',
+              transition: 'all 0.3s ease',
+              transform: activeSlot === index ? 'scale(1.02)' : 'scale(1)',
+            }}
+          >
             <div className="time-slot-icon">
               {slot.icon}
             </div>
             <div className="time-slot-time">{slot.time}</div>
             <div className="time-slot-label">{slot.label}</div>
-          </div>
+          </button>
         ))}
       </div>
     </div>
