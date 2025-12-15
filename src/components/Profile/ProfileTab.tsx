@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   User, MapPin, Bell, Settings, Star, Shield, 
   Smartphone, Moon, Sun, Globe, ChevronRight, Sparkles,
@@ -24,8 +24,8 @@ export const ProfileTab: React.FC = () => {
   // Get real data from store
   const { currentData } = useEnvironmentStore();
   
-  // Firebase
-  const firebaseServices = getFirebaseServices();
+  // Firebase - memoize to prevent re-initialization
+  const firebaseServices = useMemo(() => getFirebaseServices(), []);
 
   // Auth State
   const [user, setUser] = useState<FirebaseUser | null>(null);
